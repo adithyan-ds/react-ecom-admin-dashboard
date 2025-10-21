@@ -38,7 +38,7 @@ export default function ProductDetails() {
     <div className="min-h-screen bg-gray-50">
       <UserNavbar />
 
-      {
+      
       <div className="max-w-6xl mx-auto px-6 py-16 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
         
         <motion.div
@@ -93,7 +93,7 @@ export default function ProductDetails() {
         </motion.div>
       </div>
 
-     
+      
       {relatedProducts.length > 0 && (
         <div className="max-w-6xl mx-auto px-6 pb-16">
           <h2 className="text-2xl font-bold text-gray-800 mb-6">
