@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "./AuthContext";
 
@@ -9,23 +9,35 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
 
+  // 🧠 Memoized LocalStorage Utilities
+  const loadAllData = useCallback(
+    (key) => JSON.parse(localStorage.getItem(key)) || {},
+    []
+  );
 
-  const loadAllData = (key) => JSON.parse(localStorage.getItem(key)) || {};
-  const saveAllData = (key, data) =>
+  const saveAllData = useCallback((key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
+  }, []);
 
-  const loadUserData = (key) => {
-    const allData = loadAllData(key);
-    return currentUser?.email ? allData[currentUser.email] || [] : [];
-  };
+  const loadUserData = useCallback(
+    (key) => {
+      const allData = loadAllData(key);
+      return currentUser?.email ? allData[currentUser.email] || [] : [];
+    },
+    [currentUser, loadAllData]
+  );
 
-  const saveUserData = (key, data) => {
-    if (!currentUser?.email) return;
-    const allData = loadAllData(key);
-    allData[currentUser.email] = data;
-    saveAllData(key, allData);
-  };
+  const saveUserData = useCallback(
+    (key, data) => {
+      if (!currentUser?.email) return;
+      const allData = loadAllData(key);
+      allData[currentUser.email] = data;
+      saveAllData(key, allData);
+    },
+    [currentUser, loadAllData, saveAllData]
+  );
 
+  // 🧩 Load user’s data on login
   useEffect(() => {
     if (currentUser) {
       setCart(loadUserData("userCarts"));
@@ -34,24 +46,25 @@ export const CartProvider = ({ children }) => {
       setCart([]);
       setOrders([]);
     }
-  }, [currentUser]);
+  }, [currentUser, loadUserData]);
 
+  // 💾 Sync cart with localStorage
   useEffect(() => {
     if (currentUser) {
       saveUserData("userCarts", cart);
       window.dispatchEvent(new Event("cartUpdated"));
     }
-  }, [cart, currentUser,saveUserData]);
+  }, [cart, currentUser, saveUserData]);
 
- 
+  // 💾 Sync orders with localStorage
   useEffect(() => {
     if (currentUser) {
       saveUserData("userOrders", orders);
       window.dispatchEvent(new Event("ordersUpdated"));
     }
-  }, [orders, currentUser,saveUserData]);
+  }, [orders, currentUser, saveUserData]);
 
-
+  // 🛒 Add item
   const addToCart = (product) => {
     setCart((prev) => {
       const exists = prev.find((item) => item.id === product.id);
@@ -64,7 +77,7 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-
+  // ❌ Remove item
   const removeFromCart = (id) => {
     setCart((prev) => {
       const updated = prev.filter((item) => item.id !== id);
@@ -73,7 +86,7 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-
+  // 🧹 Clear cart
   const clearCart = () => {
     if (cart.length === 0) {
       toast.error("Cart is already empty!");
@@ -83,13 +96,12 @@ export const CartProvider = ({ children }) => {
     toast.success("Cart cleared!");
   };
 
-
+  // ✅ Place order
   const placeOrder = () => {
     if (!currentUser) {
       toast.error("Please log in to place an order!");
       return;
     }
-
     if (cart.length === 0) {
       toast.error("Your cart is empty!");
       return;
@@ -109,23 +121,23 @@ export const CartProvider = ({ children }) => {
       return updatedOrders;
     });
 
- 
+    // Add globally for admin
     const allOrders = loadAllData("allOrders");
     allOrders[newOrder.id] = newOrder;
     saveAllData("allOrders", allOrders);
 
-
+    // Clear cart
     setCart([]);
     saveUserData("userCarts", []);
 
-
+    // Notify listeners
     window.dispatchEvent(new Event("cartUpdated"));
     window.dispatchEvent(new Event("ordersUpdated"));
 
     toast.success("Order placed successfully!");
   };
 
-
+  // 💰 Total
   const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
   return (
