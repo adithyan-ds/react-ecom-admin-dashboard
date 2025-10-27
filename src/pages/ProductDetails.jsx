@@ -1,9 +1,9 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useProducts } from "../Contexts/ProductContext";
-import { useCart, buyNow } from "../Contexts/CartContext";
+import { useProducts } from "../contexts/ProductContext";
+import { useCart } from "../contexts/CartContext";
 import UserNavbar from "../components/UserNavbar";
-
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 
 export default function ProductDetails() {

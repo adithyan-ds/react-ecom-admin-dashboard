@@ -4,7 +4,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-fade";
-
+import { motion } from "framer-motion";
 import { FaShoppingBag } from "react-icons/fa";
 import slide1 from "../assets/slide1.jpg";
 import slide2 from "../assets/slide2.jpg";

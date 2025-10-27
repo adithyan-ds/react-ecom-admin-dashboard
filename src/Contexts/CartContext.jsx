@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState, useCallback } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useAuth } from "./AuthContext";
 
@@ -10,32 +10,21 @@ export const CartProvider = ({ children }) => {
   const [orders, setOrders] = useState([]);
 
 
-  const loadAllData = useCallback(
-    (key) => JSON.parse(localStorage.getItem(key)) || {},
-    []
-  );
-
-  const saveAllData = useCallback((key, data) => {
+  const loadAllData = (key) => JSON.parse(localStorage.getItem(key)) || {};
+  const saveAllData = (key, data) =>
     localStorage.setItem(key, JSON.stringify(data));
-  }, []);
 
-  const loadUserData = useCallback(
-    (key) => {
-      const allData = loadAllData(key);
-      return currentUser?.email ? allData[currentUser.email] || [] : [];
-    },
-    [currentUser, loadAllData]
-  );
+  const loadUserData = (key) => {
+    const allData = loadAllData(key);
+    return currentUser?.email ? allData[currentUser.email] || [] : [];
+  };
 
-  const saveUserData = useCallback(
-    (key, data) => {
-      if (!currentUser?.email) return;
-      const allData = loadAllData(key);
-      allData[currentUser.email] = data;
-      saveAllData(key, allData);
-    },
-    [currentUser, loadAllData, saveAllData]
-  );
+  const saveUserData = (key, data) => {
+    if (!currentUser?.email) return;
+    const allData = loadAllData(key);
+    allData[currentUser.email] = data;
+    saveAllData(key, allData);
+  };
 
   useEffect(() => {
     if (currentUser) {
@@ -45,15 +34,14 @@ export const CartProvider = ({ children }) => {
       setCart([]);
       setOrders([]);
     }
-  }, [currentUser, loadUserData]);
+  }, [currentUser]);
 
-  
   useEffect(() => {
     if (currentUser) {
       saveUserData("userCarts", cart);
       window.dispatchEvent(new Event("cartUpdated"));
     }
-  }, [cart, currentUser, saveUserData]);
+  }, [cart, currentUser]);
 
  
   useEffect(() => {
@@ -61,7 +49,7 @@ export const CartProvider = ({ children }) => {
       saveUserData("userOrders", orders);
       window.dispatchEvent(new Event("ordersUpdated"));
     }
-  }, [orders, currentUser, saveUserData]);
+  }, [orders, currentUser]);
 
 
   const addToCart = (product) => {
@@ -95,12 +83,13 @@ export const CartProvider = ({ children }) => {
     toast.success("Cart cleared!");
   };
 
- 
+
   const placeOrder = () => {
     if (!currentUser) {
       toast.error("Please log in to place an order!");
       return;
     }
+
     if (cart.length === 0) {
       toast.error("Your cart is empty!");
       return;
@@ -120,16 +109,16 @@ export const CartProvider = ({ children }) => {
       return updatedOrders;
     });
 
-    // Add globally for admin
+ 
     const allOrders = loadAllData("allOrders");
     allOrders[newOrder.id] = newOrder;
     saveAllData("allOrders", allOrders);
 
-    // Clear cart
+
     setCart([]);
     saveUserData("userCarts", []);
 
-    // Notify listeners
+
     window.dispatchEvent(new Event("cartUpdated"));
     window.dispatchEvent(new Event("ordersUpdated"));
 
@@ -156,5 +145,4 @@ export const CartProvider = ({ children }) => {
   );
 };
 
-// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => useContext(CartContext);

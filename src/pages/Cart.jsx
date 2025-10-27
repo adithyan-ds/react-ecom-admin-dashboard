@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../Contexts/CartContext";
+import { useCart } from "../contexts/CartContext";
 import UserNavbar from "../components/UserNavbar";
-
+import { motion } from "framer-motion";
 
 export default function Cart() {
   const { cart, removeFromCart, clearCart, total } = useCart();

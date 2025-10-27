@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../Contexts/CartContext";
-
+import { useCart } from "../contexts/CartContext";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import UserNavbar from "../components/UserNavbar";
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useCart } from "../Contexts/CartContext";
+import { useCart } from "../contexts/CartContext";
 import UserNavbar from "../components/UserNavbar";
 
 export default function OrderHistory() {
