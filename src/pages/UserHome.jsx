@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import UserNavbar from "../components/UserNavbar";
-import { useProducts } from "../contexts/ProductContext";
-import { useCart } from "../contexts/CartContext";
+import { useProducts } from "../Contexts/ProductContext";
+import { useCart } from "../Contexts/CartContext";
 
 export default function UserHome() {
   const { products } = useProducts();

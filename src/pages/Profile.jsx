@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { useAuth } from "../contexts/AuthContext";
-import { useCart } from "../contexts/CartContext";
+import { useAuth } from "../Contexts/AuthContext";
+import { useCart } from "../Contexts/CartContext";
 import UserNavbar from "../components/UserNavbar";
 import toast from "react-hot-toast";
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useProducts } from "../contexts/ProductContext";
-import { useCart } from "../contexts/CartContext";
+import { useProducts } from "../Contexts/ProductContext";
+import { useCart, buyNow } from "../Contexts/CartContext";
 import UserNavbar from "../components/UserNavbar";
 
 import toast from "react-hot-toast";
