@@ -41,7 +41,7 @@ export const CartProvider = ({ children }) => {
       saveUserData("userCarts", cart);
       window.dispatchEvent(new Event("cartUpdated"));
     }
-  }, [cart, currentUser]);
+  }, [cart, currentUser,saveUserData]);
 
  
   useEffect(() => {
@@ -49,7 +49,7 @@ export const CartProvider = ({ children }) => {
       saveUserData("userOrders", orders);
       window.dispatchEvent(new Event("ordersUpdated"));
     }
-  }, [orders, currentUser]);
+  }, [orders, currentUser,saveUserData]);
 
 
   const addToCart = (product) => {
