@@ -9,7 +9,7 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [orders, setOrders] = useState([]);
 
-  // 🧠 Memoized LocalStorage Utilities
+
   const loadAllData = useCallback(
     (key) => JSON.parse(localStorage.getItem(key)) || {},
     []
@@ -37,7 +37,6 @@ export const CartProvider = ({ children }) => {
     [currentUser, loadAllData, saveAllData]
   );
 
-  // 🧩 Load user’s data on login
   useEffect(() => {
     if (currentUser) {
       setCart(loadUserData("userCarts"));
@@ -48,7 +47,7 @@ export const CartProvider = ({ children }) => {
     }
   }, [currentUser, loadUserData]);
 
-  // 💾 Sync cart with localStorage
+  
   useEffect(() => {
     if (currentUser) {
       saveUserData("userCarts", cart);
@@ -56,7 +55,7 @@ export const CartProvider = ({ children }) => {
     }
   }, [cart, currentUser, saveUserData]);
 
-  // 💾 Sync orders with localStorage
+ 
   useEffect(() => {
     if (currentUser) {
       saveUserData("userOrders", orders);
@@ -64,7 +63,7 @@ export const CartProvider = ({ children }) => {
     }
   }, [orders, currentUser, saveUserData]);
 
-  // 🛒 Add item
+
   const addToCart = (product) => {
     setCart((prev) => {
       const exists = prev.find((item) => item.id === product.id);
@@ -77,7 +76,7 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // ❌ Remove item
+
   const removeFromCart = (id) => {
     setCart((prev) => {
       const updated = prev.filter((item) => item.id !== id);
@@ -86,7 +85,7 @@ export const CartProvider = ({ children }) => {
     });
   };
 
-  // 🧹 Clear cart
+
   const clearCart = () => {
     if (cart.length === 0) {
       toast.error("Cart is already empty!");
@@ -96,7 +95,7 @@ export const CartProvider = ({ children }) => {
     toast.success("Cart cleared!");
   };
 
-  // ✅ Place order
+ 
   const placeOrder = () => {
     if (!currentUser) {
       toast.error("Please log in to place an order!");
@@ -137,7 +136,7 @@ export const CartProvider = ({ children }) => {
     toast.success("Order placed successfully!");
   };
 
-  // 💰 Total
+
   const total = cart.reduce((sum, item) => sum + Number(item.price), 0);
 
   return (
@@ -157,4 +156,5 @@ export const CartProvider = ({ children }) => {
   );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useCart = () => useContext(CartContext);

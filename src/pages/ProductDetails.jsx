@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useProducts } from "../contexts/ProductContext";
 import { useCart } from "../contexts/CartContext";
 import UserNavbar from "../components/UserNavbar";
-import { motion } from "framer-motion";
+
 import toast from "react-hot-toast";
 
 export default function ProductDetails() {
